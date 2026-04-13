@@ -7,7 +7,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 import ui.utils.CustomActions;
 
-public class Login {
+public class Login extends BasePage {
     @FindBy(css = "h2")
     private WebElement txtLoginHeader;
 
@@ -32,6 +32,7 @@ public class Login {
     CustomActions customActions;
 
     public Login(WebDriver driver) {
+        super(driver);
         customActions = new CustomActions(driver);
         PageFactory.initElements(driver, this);
     }

@@ -9,28 +9,12 @@ import ui.pages.SecureArea;
 
 import java.util.HashMap;
 
-public class LoginTests {
+public class LoginTests extends BaseTest {
 
     @Test
     public void testLogin() {
         String username = "tomsmith";
         String password = "SuperSecretPassword!";
-
-        WebDriver driver;
-        ChromeOptions options = new ChromeOptions();
-
-        HashMap<String, Boolean> prefs = new HashMap<>();
-        prefs.put( "profile.password_manager_leak_detection", false);
-        prefs.put( "credentials_enable_service", false);
-        prefs.put( "profile.password_manager_enabled", false);
-
-        options.setExperimentalOption("prefs", prefs);
-
-        driver = new ChromeDriver(options);
-
-        driver.get("https://the-internet.herokuapp.com/login");
-        Login login = new Login(driver);
-        SecureArea secureArea = new SecureArea(driver);
 
         login.verifyLoginHeader();
         login.verifyLoginSubheader();
@@ -48,8 +32,5 @@ public class LoginTests {
         login.clickLogin();
 
         secureArea.verifyLogoutScreen();
-
-        driver.close();
-        driver.quit();
     }
 }
