@@ -1,11 +1,11 @@
-package tests;
+package ui.tests;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.Test;
-import pages.Login;
-import pages.SecureArea;
+import ui.pages.Login;
+import ui.pages.SecureArea;
 
 import java.util.HashMap;
 
