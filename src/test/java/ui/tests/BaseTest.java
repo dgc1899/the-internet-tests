@@ -6,6 +6,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import ui.pages.BasePage;
+import ui.pages.Frames;
 import ui.pages.Login;
 import ui.pages.SecureArea;
 
@@ -17,8 +18,12 @@ public class BaseTest {
     BasePage basePage;
     Login login;
     SecureArea secureArea;
+    Frames frames;
 
     LoginTests loginTests;
+    FramesTests framesTests;
+
+    String baseUrl = "https://the-internet.herokuapp.com";
 
     @BeforeMethod
     public void setUp() {
@@ -32,13 +37,15 @@ public class BaseTest {
         options.setExperimentalOption("prefs", prefs);
 
         driver = new ChromeDriver(options);
-        driver.get("https://the-internet.herokuapp.com/login");
+        driver.get(baseUrl);
 
         basePage = new BasePage(driver);
         login = new Login(driver);
         secureArea = new SecureArea(driver);
+        frames =  new Frames(driver);
 
         loginTests = new LoginTests();
+        framesTests = new FramesTests();
     }
 
     @AfterMethod

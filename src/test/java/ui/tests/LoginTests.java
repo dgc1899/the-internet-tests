@@ -13,6 +13,7 @@ public class LoginTests extends BaseTest {
 
     @Test
     public void testLogin() {
+        driver.get(baseUrl + "/login");
         String username = "tomsmith";
         String password = "SuperSecretPassword!";
 

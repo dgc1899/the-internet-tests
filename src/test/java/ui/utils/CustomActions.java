@@ -40,9 +40,26 @@ public class CustomActions {
         }
     }
 
+    public String getTextFromElement(WebElement element) {
+        String text = "";
+        try {
+            wait.until(ExpectedConditions.visibilityOf(element));
+             text = element.getText();
+
+        }
+        catch (Exception ex) {
+            System.out.println("Error while getting text");
+        }
+        return text;
+    }
+
     public void scrollToElement(WebElement element) {
         new Actions(driver)
                 .scrollToElement(element)
                 .perform();
+    }
+
+    public void goToDefaultContent() {
+        driver.switchTo().defaultContent();
     }
 }
