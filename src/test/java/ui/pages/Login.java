@@ -1,10 +1,11 @@
-package pages;
+package ui.pages;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
+import ui.utils.CustomActions;
 
 public class Login {
     @FindBy(css = "h2")
@@ -28,9 +29,10 @@ public class Login {
     @FindBy(css = "button[type='submit']")
     private WebElement btnLogin;
 
-    WebDriver driver;
+    CustomActions customActions;
 
     public Login(WebDriver driver) {
+        customActions = new CustomActions(driver);
         PageFactory.initElements(driver, this);
     }
 
@@ -66,15 +68,14 @@ public class Login {
     }
 
     public void enterUsername(String username) {
-        txbxUsername.sendKeys(username);
+        customActions.enterText(txbxUsername, username);
     }
 
     public void enterPassword(String password) {
-        txbxPassword.sendKeys(password);
-
+        customActions.enterText(txbxPassword, password);
     }
 
     public void clickLogin() {
-        btnLogin.click();
+        customActions.clickElement(btnLogin);
     }
 }
