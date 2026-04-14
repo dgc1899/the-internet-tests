@@ -5,10 +5,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import ui.pages.BasePage;
-import ui.pages.Frames;
-import ui.pages.Login;
-import ui.pages.SecureArea;
+import ui.pages.*;
 
 import java.util.HashMap;
 
@@ -19,9 +16,15 @@ public class BaseTest {
     Login login;
     SecureArea secureArea;
     Frames frames;
+    Alerts alerts;
+    Windows windows;
+    Dropdown dropdown;
 
     LoginTests loginTests;
     FramesTests framesTests;
+    AlertsTests alertsTests;
+    WindowsTests windowsTests;
+    DropdownTests dropdownTests;
 
     String baseUrl = "https://the-internet.herokuapp.com";
 
@@ -43,9 +46,15 @@ public class BaseTest {
         login = new Login(driver);
         secureArea = new SecureArea(driver);
         frames =  new Frames(driver);
+        alerts = new Alerts(driver);
+        windows = new Windows(driver);
+        dropdown = new Dropdown(driver);
 
         loginTests = new LoginTests();
         framesTests = new FramesTests();
+        alertsTests = new AlertsTests();
+        windowsTests = new WindowsTests();
+        dropdownTests = new DropdownTests();
     }
 
     @AfterMethod

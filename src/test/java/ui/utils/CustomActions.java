@@ -1,5 +1,7 @@
 package ui.utils;
 
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -57,6 +59,38 @@ public class CustomActions {
         new Actions(driver)
                 .scrollToElement(element)
                 .perform();
+    }
+
+    public Alert switchToAlert() {
+        //This method waits for a JS Alert to be present
+        return wait.until(ExpectedConditions.alertIsPresent());
+    }
+
+    public void acceptAlert() {
+        wait.until(ExpectedConditions.alertIsPresent());
+        Alert alert = driver.switchTo().alert();
+        alert.accept();
+    }
+
+    public void cancelAlert() {
+        wait.until(ExpectedConditions.alertIsPresent());
+        Alert alert = driver.switchTo().alert();
+        alert.dismiss();
+    }
+
+    public Object[] getWindowHandles() {
+        Object[] windowHandles = driver.getWindowHandles().toArray();
+        return windowHandles;
+    }
+
+    public void switchToTab(int index) {
+        Object[] windowHandles = getWindowHandles();
+        try {
+            driver.switchTo().window((String)windowHandles[index]);
+        }
+        catch (IndexOutOfBoundsException ex) {
+            System.out.println("Index not found in Window handles array");
+        }
     }
 
     public void goToDefaultContent() {
