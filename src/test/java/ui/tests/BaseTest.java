@@ -19,12 +19,16 @@ public class BaseTest {
     Alerts alerts;
     Windows windows;
     Dropdown dropdown;
+    DynamicLoading dynamicLoading;
+    Hovers hovers;
 
     LoginTests loginTests;
     FramesTests framesTests;
     AlertsTests alertsTests;
     WindowsTests windowsTests;
     DropdownTests dropdownTests;
+    DynamicLoadingTests dynamicLoadingTests;
+    HoversTests hoversTests;
 
     String baseUrl = "https://the-internet.herokuapp.com";
 
@@ -49,12 +53,16 @@ public class BaseTest {
         alerts = new Alerts(driver);
         windows = new Windows(driver);
         dropdown = new Dropdown(driver);
+        dynamicLoading = new DynamicLoading(driver);
+        hovers = new Hovers(driver);
 
         loginTests = new LoginTests();
         framesTests = new FramesTests();
         alertsTests = new AlertsTests();
         windowsTests = new WindowsTests();
         dropdownTests = new DropdownTests();
+        dynamicLoadingTests = new DynamicLoadingTests();
+        hoversTests = new HoversTests();
     }
 
     @AfterMethod

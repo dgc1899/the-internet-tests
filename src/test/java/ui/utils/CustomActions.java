@@ -1,9 +1,6 @@
 package ui.utils;
 
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -61,6 +58,15 @@ public class CustomActions {
                 .perform();
     }
 
+    public void waitForElementToBeDisplayed(WebElement element) {
+        try {
+            wait.until(ExpectedConditions.visibilityOf(element));
+        }
+        catch (NoSuchElementException ex) {
+            System.out.println("Element was never displayed");
+        }
+    }
+
     public Alert switchToAlert() {
         //This method waits for a JS Alert to be present
         return wait.until(ExpectedConditions.alertIsPresent());
@@ -91,6 +97,10 @@ public class CustomActions {
         catch (IndexOutOfBoundsException ex) {
             System.out.println("Index not found in Window handles array");
         }
+    }
+
+    public void hoverOverElement(WebElement element) {
+        new Actions(driver).moveToElement(element).perform();
     }
 
     public void goToDefaultContent() {
