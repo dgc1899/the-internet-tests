@@ -5,9 +5,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import ui.pages.BasePage;
-import ui.pages.Login;
-import ui.pages.SecureArea;
+import ui.pages.*;
 
 import java.util.HashMap;
 
@@ -17,8 +15,22 @@ public class BaseTest {
     BasePage basePage;
     Login login;
     SecureArea secureArea;
+    Frames frames;
+    Alerts alerts;
+    Windows windows;
+    Dropdown dropdown;
+    DynamicLoading dynamicLoading;
+    Hovers hovers;
 
     LoginTests loginTests;
+    FramesTests framesTests;
+    AlertsTests alertsTests;
+    WindowsTests windowsTests;
+    DropdownTests dropdownTests;
+    DynamicLoadingTests dynamicLoadingTests;
+    HoversTests hoversTests;
+
+    String baseUrl = "https://the-internet.herokuapp.com";
 
     @BeforeMethod
     public void setUp() {
@@ -32,13 +44,25 @@ public class BaseTest {
         options.setExperimentalOption("prefs", prefs);
 
         driver = new ChromeDriver(options);
-        driver.get("https://the-internet.herokuapp.com/login");
+        driver.get(baseUrl);
 
         basePage = new BasePage(driver);
         login = new Login(driver);
         secureArea = new SecureArea(driver);
+        frames =  new Frames(driver);
+        alerts = new Alerts(driver);
+        windows = new Windows(driver);
+        dropdown = new Dropdown(driver);
+        dynamicLoading = new DynamicLoading(driver);
+        hovers = new Hovers(driver);
 
         loginTests = new LoginTests();
+        framesTests = new FramesTests();
+        alertsTests = new AlertsTests();
+        windowsTests = new WindowsTests();
+        dropdownTests = new DropdownTests();
+        dynamicLoadingTests = new DynamicLoadingTests();
+        hoversTests = new HoversTests();
     }
 
     @AfterMethod
