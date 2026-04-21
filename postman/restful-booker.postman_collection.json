@@ -1,0 +1,296 @@
+{
+  "info": {
+    "_postman_id": "e6b8fc5b-d489-48c1-9db1-2dd4b621fb3b",
+    "name": "restful-booker",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "22782100"
+  },
+  "item": [
+    {
+      "name": "POST auth",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const jsonData = pm.response.json();",
+              "pm.environment.set(\"authToken\", jsonData.token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\" : \"admin\",\n    \"password\" : \"password123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "auth"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET booking",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Test GET existing booking returns 200\", function() {",
+              "    pm.response.to.have.status(200);",
+              "})",
+              "",
+              "",
+              "pm.test(\"Response time is less than 200ms\", function() {",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/booking/:id",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "booking",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "10"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST booking",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test(\"Test POST booking with valid data returns 200\", function() {",
+              "    pm.expect(pm.response.code).to.be.equals(200);",
+              "}",
+              ");",
+              "",
+              "pm.test(\"Test POST booking with valid data returns message with data\", function() {",
+              "   pm.expect(jsonData.bookingid).to.be.a(\"number\");",
+              "   pm.expect(jsonData.bookingid).to.be.above(0);",
+              "",
+              "   pm.expect(jsonData.booking.firstname).to.be.eql(\"Daniel\");",
+              "   pm.expect(jsonData.booking.lastname).to.be.eql(\"Garcia\");",
+              "   pm.expect(jsonData.booking.totalprice).to.be.eql(150);",
+              "   pm.expect(jsonData.booking.totalprice).to.be.eql(150);",
+              "   pm.expect(jsonData.booking.depositpaid).to.be.eql(true);",
+              "   pm.expect(jsonData.booking.bookingdates.checkin).to.be.eql(\"2026-03-02\");",
+              "   pm.expect(jsonData.booking.bookingdates.checkout).to.be.eql(\"2026-04-02\");",
+              "   pm.expect(jsonData.booking.additionalneeds).to.be.eql(\"None\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"firstname\": \"Daniel\",\n    \"lastname\": \"Garcia\",\n    \"totalprice\": 150,\n    \"depositpaid\": true,\n    \"bookingdates\": {\n        \"checkin\": \"2026-03-02\",\n        \"checkout\": \"2026-04-02\"\n    },\n    \"additionalneeds\": \"None\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/booking",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "booking"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PUT booking",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "token={{authToken}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"firstname\": \"Barack\",\n    \"lastname\": \"Obamna\",\n    \"totalprice\": 123,\n    \"depositpaid\": false,\n    \"bookingdates\": {\n        \"checkin\": \"2008-01-01\",\n        \"checkout\": \"2016-01-01\"\n    },\n    \"additionalneeds\": \"Nah\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/booking/:id",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "booking",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "644"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE booking",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "token={{authToken}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/booking/:id",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "booking",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "644"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET bookingIds",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/booking",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "booking"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    }
+  ]
+}

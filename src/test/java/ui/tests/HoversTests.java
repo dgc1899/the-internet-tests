@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 
 public class HoversTests extends BaseTest {
 
-    @Test
+    @Test(groups = {"functional"})
     public void testHover() {
         driver.get(baseUrl + "/hovers");
 

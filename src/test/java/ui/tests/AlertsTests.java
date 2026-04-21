@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 
 public class AlertsTests extends BaseTest {
 
-    @Test
+    @Test(groups = {"regression"})
     public void testJSAlert() {
         driver.get(baseUrl + "/javascript_alerts");
 
@@ -17,7 +17,7 @@ public class AlertsTests extends BaseTest {
         Assert.assertEquals(alerts.getResult(), "Result:You successfully clicked an alert");
     }
 
-    @Test
+    @Test(groups = {"regression"})
     public void testJSConfirmAlertAccept() {
         driver.get(baseUrl + "/javascript_alerts");
 
@@ -29,7 +29,7 @@ public class AlertsTests extends BaseTest {
         Assert.assertEquals(alerts.getResult(), "Result:You clicked: Ok");
     }
 
-    @Test
+    @Test(groups = {"regression"})
     public void testJSConfirmAlertCancel() {
         driver.get(baseUrl + "/javascript_alerts");
 
@@ -41,7 +41,7 @@ public class AlertsTests extends BaseTest {
         Assert.assertEquals(alerts.getResult(), "Result:You clicked: Cancel");
     }
 
-    @Test
+    @Test(groups = {"regression"})
     public void testJSPromptAlert() {
         driver.get(baseUrl + "/javascript_alerts");
 

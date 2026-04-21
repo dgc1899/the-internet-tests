@@ -32,7 +32,7 @@ public class BaseTest {
 
     String baseUrl = "https://the-internet.herokuapp.com";
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void setUp() {
         ChromeOptions options = new ChromeOptions();
 
@@ -65,7 +65,7 @@ public class BaseTest {
         hoversTests = new HoversTests();
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void teardown() {
         driver.close();
         driver.quit();
