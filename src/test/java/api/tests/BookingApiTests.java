@@ -3,6 +3,7 @@ package api.tests;
 import api.pojos.AuthRequest;
 import api.pojos.Booking;
 import api.pojos.BookingDate;
+import api.utils.ApiDataProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.restassured.RestAssured;
@@ -14,7 +15,7 @@ import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
 public class BookingApiTests extends BaseTest {
-    @Test
+    @Test(groups = {"smoke", "regression"})
     public void getBooking_returns200_whenBookingExists() {
 
         get(baseURI).
@@ -23,7 +24,7 @@ public class BookingApiTests extends BaseTest {
                 .body("firstname", notNullValue());
     }
 
-    @Test
+    @Test(groups = {"smoke", "regression"})
     public void postAuthToken_validCredentials_returnsToken() {
         AuthRequest request = new AuthRequest("admin", "password123");
 
@@ -42,7 +43,7 @@ public class BookingApiTests extends BaseTest {
                     .body("token", notNullValue());
     }
 
-    @Test
+    @Test(groups = {"functional"})
     public void postAuthToken_invalidCredentials_rejected() {
         AuthRequest request = new AuthRequest("dan", "invalidUser");
 
@@ -61,7 +62,7 @@ public class BookingApiTests extends BaseTest {
                         "token", nullValue());
     }
 
-    @Test
+    @Test(groups = {"regression"})
     public void postBooking_validData_returnsBooking() {
         BookingDate bookingDate = new BookingDate("2018-01-01", "2018-01-03");
         Booking booking = new Booking(
@@ -94,7 +95,7 @@ public class BookingApiTests extends BaseTest {
                         "bookingid", notNullValue());
     }
 
-    @Test
+    @Test(groups = {"smoke"})
     public void getBooking_validData_returnsBooking() {
         BookingDate bookingDate = new BookingDate("2018-01-01", "2018-01-03");
         Booking booking = new Booking(
@@ -139,7 +140,7 @@ public class BookingApiTests extends BaseTest {
                         "additionalneeds", equalTo(booking.getAdditionalneeds()));
     }
 
-    @Test
+    @Test(groups = {"functional"})
     public void getBooking_invalidData_returns404() {
         given()
                 .baseUri(baseURI)
@@ -153,7 +154,7 @@ public class BookingApiTests extends BaseTest {
                 .statusCode(404);
     }
 
-    @Test
+    @Test(groups = {"functional"})
     public void putBooking_validData_validAuth_returnsUpdatedBooking() {
         String authToken = ApiUtils.getAuthToken();
 
@@ -211,7 +212,7 @@ public class BookingApiTests extends BaseTest {
                         "additionalneeds", equalTo(booking.getAdditionalneeds()));
     }
 
-    @Test
+    @Test(groups = {"functional"})
     public void patchBooking_validData_validAuth_returnsUpdatedBooking() {
         String authToken = ApiUtils.getAuthToken();
         BookingDate bookingDate = new BookingDate("2018-01-01", "2018-01-03");
@@ -266,7 +267,7 @@ public class BookingApiTests extends BaseTest {
 
     }
 
-    @Test
+    @Test(groups = {"smoke", "regression"})
     public void deleteBooking_validAuth_returns201() {
         String authToken = ApiUtils.getAuthToken();
         BookingDate bookingDate = new BookingDate("2018-01-01", "2018-01-03");
@@ -316,5 +317,29 @@ public class BookingApiTests extends BaseTest {
 
 
 
+    }
+
+    @Test(dataProvider = "Booking data provider", dataProviderClass = ApiDataProvider.class,
+            groups = {"functional"})
+    public void postBooking_threeTimes_validData_returns200(Booking booking) {
+        given()
+                .baseUri(baseURI)
+                .contentType(ContentType.JSON)
+                .body(booking)
+                .log().ifValidationFails()
+                .when()
+                .post("/booking")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(200)
+                .body("booking.firstname", equalTo(booking.getFirstname()),
+                        "booking.lastname", equalTo(booking.getLastname()),
+                        "booking.totalprice", equalTo(booking.getTotalprice()),
+                        "booking.depositpaid", equalTo(booking.isDepositpaid()),
+                        "booking.bookingdates.checkin", equalTo(booking.getBookingdates().getCheckin()),
+                        "booking.bookingdates.checkout", equalTo(booking.getBookingdates().getCheckout()),
+                        "booking.additionalneeds", equalTo(booking.getAdditionalneeds()),
+                        "bookingid", notNullValue());
     }
 }

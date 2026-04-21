@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class LoginTests extends BaseTest {
 
-    @Test
+    @Test(groups = {"smoke", "regression"})
     public void testLogin() {
         driver.get(baseUrl + "/login");
         String username = "tomsmith";

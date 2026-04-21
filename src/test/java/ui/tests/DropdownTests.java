@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 
 public class DropdownTests extends BaseTest {
 
-    @Test
+    @Test(groups = {"smoke", "regression"})
     public void testSelectOptions() {
         driver.get(baseUrl + "/dropdown");
 

@@ -1,14 +1,25 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 
-<suite name="functional">
-
+<suite name="smoke">
     <test name="ui">
+        <groups>
+            <run>
+                <include name="smoke"/>
+            </run>
+        </groups>
+        
         <packages>
             <package name="ui.tests"/>
         </packages>
     </test>
-
+    
     <test name="api">
+        <groups>
+            <run>
+                <include name="smoke"/>
+            </run>
+        </groups>
+        
         <packages>
             <package name="api.tests"/>
         </packages>

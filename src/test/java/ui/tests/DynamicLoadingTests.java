@@ -4,7 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class DynamicLoadingTests extends BaseTest {
-    @Test
+    @Test(groups = {"functional"})
     public void testDynamicLoadingHiddenElement() {
         driver.get(baseUrl + "/dynamic_loading/1");
 
@@ -24,7 +24,7 @@ public class DynamicLoadingTests extends BaseTest {
         Assert.assertEquals(dynamicLoading.getHelloWorldTextVisibility(), true);
     }
 
-    @Test
+    @Test(groups = {"functional"})
     public void testDynamicLoadingNonExistingElement() {
         driver.get(baseUrl + "/dynamic_loading/2");
 

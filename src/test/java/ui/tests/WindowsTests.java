@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 
 public class WindowsTests extends BaseTest {
 
-    @Test
+    @Test(groups = {"functional"})
     public void testOpenNewTab() {
         driver.get(baseUrl + "/windows");
 
@@ -19,7 +19,7 @@ public class WindowsTests extends BaseTest {
         Assert.assertEquals(windows.getNewTabTitle(), "New Window");
     }
 
-    @Test
+    @Test(groups = {"functional"})
     public void testOpenAndCloseNewTab() {
         driver.get(baseUrl + "/windows");
 

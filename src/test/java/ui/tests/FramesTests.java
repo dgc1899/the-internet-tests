@@ -7,7 +7,7 @@ public class FramesTests extends BaseTest {
 
     String framesUrl = baseUrl + "/nested_frames";
 
-    @Test
+    @Test(groups = {"functional"})
     public void testBottomFrameNavigation() {
         driver.get(framesUrl);
 
@@ -16,7 +16,7 @@ public class FramesTests extends BaseTest {
         Assert.assertEquals(actual, "BOTTOM");
     }
 
-    @Test
+    @Test(groups = {"functional"})
     public void testNavigateLeftMiddleRightBottom() {
         String actualBodyText;
         driver.get(framesUrl);
