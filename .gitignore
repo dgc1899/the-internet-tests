@@ -5,6 +5,7 @@ target/
 .kotlin
 
 logs/
+logs/app.log
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
