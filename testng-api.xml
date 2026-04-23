@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="functional">
+    <listeners>
+        <listener class-name="config.TestLoggerListener"/>
+    </listeners>
+    <test name="api">
+        <packages>
+            <package name="api.tests"/>
+        </packages>
+    </test>
+</suite>

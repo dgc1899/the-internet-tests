@@ -3,11 +3,16 @@ package ui.tests;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import ui.pages.*;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Properties;
 
 public class BaseTest {
     WebDriver driver;
@@ -30,20 +35,22 @@ public class BaseTest {
     DynamicLoadingTests dynamicLoadingTests;
     HoversTests hoversTests;
 
-    String baseUrl = "https://the-internet.herokuapp.com";
+    String baseUrl = "";
+    Properties prop = new Properties();
 
     @BeforeMethod(alwaysRun = true)
     public void setUp() {
-        ChromeOptions options = new ChromeOptions();
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("configuration.properties")) {
+            prop.load(input);
+            baseUrl = prop.get("baseUrl").toString();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        HashMap<String, Boolean> prefs = new HashMap<>();
-        prefs.put( "profile.password_manager_leak_detection", false);
-        prefs.put( "credentials_enable_service", false);
-        prefs.put( "profile.password_manager_enabled", false);
+        initializeDriver();
 
-        options.setExperimentalOption("prefs", prefs);
-
-        driver = new ChromeDriver(options);
         driver.get(baseUrl);
 
         basePage = new BasePage(driver);
@@ -69,5 +76,26 @@ public class BaseTest {
     public void teardown() {
         driver.close();
         driver.quit();
+    }
+
+    private void initializeDriver() {
+        String browser = prop.get("browser").toString().toLowerCase().trim();
+        switch (browser) {
+            case "chrome":
+                ChromeOptions options = new ChromeOptions();
+                HashMap<String, Boolean> prefs = new HashMap<>();
+                prefs.put( "profile.password_manager_leak_detection", false);
+                prefs.put( "credentials_enable_service", false);
+                prefs.put( "profile.password_manager_enabled", false);
+
+                options.setExperimentalOption("prefs", prefs);
+                driver = new ChromeDriver(options);
+                return;
+            case "firefox":
+                driver = new FirefoxDriver();
+                return;
+            default:
+                throw new IllegalArgumentException("Browser not supported: " + browser);
+        }
     }
 }

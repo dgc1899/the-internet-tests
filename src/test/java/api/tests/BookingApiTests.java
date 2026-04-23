@@ -4,8 +4,10 @@ import api.pojos.AuthRequest;
 import api.pojos.Booking;
 import api.pojos.BookingDate;
 import api.utils.ApiDataProvider;
+import api.utils.CustomSpecifications;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import config.RetryAnalyzer;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import api.utils.ApiUtils;
@@ -28,18 +30,14 @@ public class BookingApiTests extends BaseTest {
     public void postAuthToken_validCredentials_returnsToken() {
         AuthRequest request = new AuthRequest("admin", "password123");
 
-        given()
-                    .baseUri(baseURI)
-                    .contentType(ContentType.JSON)
+        given(CustomSpecifications.getRequestSpecification())
                     .body(request)
-                    .log().ifValidationFails()
                 .when()
                     .post("/auth")
                 .then()
-                    .log().ifValidationFails()
+                    .spec(CustomSpecifications.getResponseSpecification(ContentType.JSON))
                     .assertThat()
                     .statusCode(200)
-                    .contentType(ContentType.JSON)
                     .body("token", notNullValue());
     }
 
@@ -47,15 +45,12 @@ public class BookingApiTests extends BaseTest {
     public void postAuthToken_invalidCredentials_rejected() {
         AuthRequest request = new AuthRequest("dan", "invalidUser");
 
-        given()
-                .baseUri(baseURI)
-                .contentType(ContentType.JSON)
+        given(CustomSpecifications.getRequestSpecification())
                 .body(request)
-                .log().everything()
                 .when()
                 .post("/auth")
                 .then()
-                .log().everything()
+                .spec(CustomSpecifications.getResponseSpecification(ContentType.JSON))
                 .assertThat()
                 .statusCode(200)
                 .body("reason", equalToIgnoringCase("Bad credentials"),
@@ -74,15 +69,12 @@ public class BookingApiTests extends BaseTest {
                 "Breakfast"
         );
 
-        given()
-                .baseUri(baseURI)
-                .contentType(ContentType.JSON)
+        given(CustomSpecifications.getRequestSpecification())
                 .body(booking)
-                .log().ifValidationFails()
                 .when()
                 .post("/booking")
                 .then()
-                .log().ifValidationFails()
+                .spec(CustomSpecifications.getResponseSpecification(ContentType.JSON))
                 .assertThat()
                 .statusCode(200)
                 .body("booking.firstname", equalTo(booking.getFirstname()),
@@ -107,29 +99,22 @@ public class BookingApiTests extends BaseTest {
                 "Breakfast"
         );
 
-        String generatedBookingId = given()
-                .baseUri(baseURI)
-                .contentType(ContentType.JSON)
-                .log().ifValidationFails()
+        String generatedBookingId = given(CustomSpecifications.getRequestSpecification())
                 .body(booking)
                 .when()
                 .post("/booking")
                 .then()
-                .contentType(ContentType.JSON)
+                .spec(CustomSpecifications.getResponseSpecification(ContentType.JSON))
                 .extract()
                 .path("bookingid").toString();
 
 
-        given()
-                .baseUri(baseURI)
-                .contentType(ContentType.JSON)
-                .log().ifValidationFails()
+        given(CustomSpecifications.getRequestSpecification())
                 .when()
                 .get("/booking/" + generatedBookingId)
                 .then()
-                .log().ifValidationFails()
+                .spec(CustomSpecifications.getResponseSpecification(ContentType.JSON))
                 .assertThat()
-                .contentType(ContentType.JSON)
                 .statusCode(200)
                 .body("firstname", equalTo(booking.getFirstname()),
                         "lastname", equalTo(booking.getLastname()),
@@ -142,14 +127,11 @@ public class BookingApiTests extends BaseTest {
 
     @Test(groups = {"functional"})
     public void getBooking_invalidData_returns404() {
-        given()
-                .baseUri(baseURI)
-                .contentType(ContentType.JSON)
-                .log().ifValidationFails()
+        given(CustomSpecifications.getRequestSpecification())
                 .when()
                 .get("/booking/9999")
                 .then()
-                .log().ifValidationFails()
+                .spec(CustomSpecifications.getResponseSpecification(ContentType.TEXT))
                 .assertThat()
                 .statusCode(404);
     }
@@ -168,14 +150,12 @@ public class BookingApiTests extends BaseTest {
                 "None"
         );
 
-        String createdBookingId = given()
-                .baseUri(baseURI)
-                .contentType(ContentType.JSON)
-                .log().ifValidationFails()
+        String createdBookingId = given(CustomSpecifications.getRequestSpecification())
                 .body(booking)
                 .when()
                 .post("/booking")
                 .then()
+                .spec(CustomSpecifications.getResponseSpecification(ContentType.JSON))
                 .assertThat()
                 .statusCode(200)
                 .extract()
@@ -191,16 +171,12 @@ public class BookingApiTests extends BaseTest {
         booking.setAdditionalneeds("Coffee");
         booking.setBookingdates(bookingDate);
 
-        given()
-                .baseUri(baseURI)
-                .contentType(ContentType.JSON)
-                .cookie("token", authToken)
-                .log().ifValidationFails()
+        given(CustomSpecifications.getRequestSpecificationWithAuth())
                 .body(booking)
                 .when()
                 .put("/booking/" + createdBookingId)
                 .then()
-                .log().ifValidationFails()
+                .spec(CustomSpecifications.getResponseSpecification(ContentType.JSON))
                 .assertThat()
                 .statusCode(200)
                 .body("firstname", equalTo(booking.getFirstname()),
@@ -225,16 +201,13 @@ public class BookingApiTests extends BaseTest {
                 "None"
         );
 
-        String bookingId = given()
-                .baseUri(baseURI)
-                .contentType(ContentType.JSON)
-                .log().ifValidationFails()
+        String bookingId = given(CustomSpecifications.getRequestSpecification())
                 .body(booking)
                 .when()
                 .post("/booking")
                 .then()
                 .assertThat()
-                .log().ifValidationFails()
+                .spec(CustomSpecifications.getResponseSpecification(ContentType.JSON))
                 .statusCode(200)
                 .extract()
                 .path("bookingid").toString();
@@ -245,16 +218,12 @@ public class BookingApiTests extends BaseTest {
         updatedUser.put("firstname", newFirstName);
         updatedUser.put("depositpaid", false);
 
-        given()
-                .baseUri(baseURI)
-                .contentType(ContentType.JSON)
-                .cookie("token", authToken)
-                .log().ifValidationFails()
+        given(CustomSpecifications.getRequestSpecificationWithAuth())
                 .body(updatedUser)
                 .when()
                 .patch("/booking/" + bookingId)
                 .then()
-                .log().ifValidationFails()
+                .spec(CustomSpecifications.getResponseSpecification(ContentType.JSON))
                 .assertThat()
                 .statusCode(200)
                 .body("firstname", equalTo(newFirstName),
@@ -280,58 +249,46 @@ public class BookingApiTests extends BaseTest {
                 "Tea"
         );
         
-        String bookingId = given()
-                .baseUri(baseURI)
-                .contentType(ContentType.JSON)
-                .log().ifValidationFails()
+        String bookingId = given(CustomSpecifications.getRequestSpecification())
                 .body(booking)
                 .when()
                 .post("/booking")
                 .then()
-                .log().ifValidationFails()
+                .spec(CustomSpecifications.getResponseSpecification(ContentType.JSON))
                 .assertThat()
                 .statusCode(200)
                 .extract()
                 .path("bookingid").toString();
 
-        given()
-                .baseUri(baseURI)
-                .cookie("token", authToken)
-                .contentType(ContentType.JSON)
-                .log().ifValidationFails()
+        given(CustomSpecifications.getRequestSpecificationWithAuth())
                 .when()
                 .delete("booking/" + bookingId)
                 .then()
-                .log().ifValidationFails()
+                .spec(CustomSpecifications.getResponseSpecification(ContentType.TEXT))
                 .assertThat()
                 .statusCode(201);
 
-        given()
-                .contentType(ContentType.JSON)
-                .log().ifValidationFails()
+        given(CustomSpecifications.getRequestSpecification())
                 .when()
                 .get("/booking/" + bookingId)
                 .then()
+                .spec(CustomSpecifications.getResponseSpecification(ContentType.TEXT))
                 .assertThat()
                 .statusCode(404);
-
-
 
     }
 
     @Test(dataProvider = "Booking data provider", dataProviderClass = ApiDataProvider.class,
             groups = {"functional"})
     public void postBooking_threeTimes_validData_returns200(Booking booking) {
-        given()
-                .baseUri(baseURI)
-                .contentType(ContentType.JSON)
+        given(CustomSpecifications.getRequestSpecification())
                 .body(booking)
-                .log().ifValidationFails()
                 .when()
                 .post("/booking")
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
+                .spec(CustomSpecifications.getResponseSpecification(ContentType.JSON))
                 .statusCode(200)
                 .body("booking.firstname", equalTo(booking.getFirstname()),
                         "booking.lastname", equalTo(booking.getLastname()),
